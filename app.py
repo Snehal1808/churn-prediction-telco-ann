@@ -121,6 +121,31 @@ for col, mapping in label_encodings.items():
 X = data[features]
 X_scaled = scaler.transform(X)
 
+# --- PDF Generation ---
+def generate_pdf(probability, prediction, tenure, charges, contract):
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+    from reportlab.lib.styles import getSampleStyleSheet
+    from io import BytesIO
+
+    styles = getSampleStyleSheet()
+    styleN = styles['Normal']
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer)
+    report = []
+
+    report.append(Paragraph("Customer Churn Prediction Report", styles['Title']))
+    report.append(Spacer(1, 12))
+    report.append(Paragraph(f"Prediction: <b>{prediction}</b>", styleN))
+    report.append(Paragraph(f"Churn Probability: {probability:.2%}", styleN))
+    report.append(Paragraph(f"Tenure: {tenure} months", styleN))
+    report.append(Paragraph(f"Monthly Charges: ${charges}", styleN))
+    report.append(Paragraph(f"Contract: {contract}", styleN))  # ✅ Here: contract is a string now
+
+    doc.build(report)
+    buffer.seek(0)
+    return buffer.read()
+
 # Predict
 if st.button("📊 Predict Churn"):
     probability = float(model.predict(X_scaled).squeeze())
@@ -186,6 +211,13 @@ if st.button("📊 Predict Churn"):
     styled = data.copy()
     styled['RiskFlag'] = ["⚠️" if (tenure < 6 or MonthlyCharges > 100 or Contract == 0) else "✅"]
     st.dataframe(styled)
+
+     # --- Output 6: PDF Report ---
+    if st.download_button("📄 Download PDF Report", 
+                      file_name="churn_report.pdf",
+                      mime="application/pdf",
+                      data=lambda: generate_pdf(probability, prediction, tenure, charges, contract)):
+        st.success("Report downloaded.")
     
     # --- Output 6: Recommendations ---
     st.subheader("💡 Recommendations")

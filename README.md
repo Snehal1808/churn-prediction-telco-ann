@@ -27,20 +27,6 @@ An AI-powered solution predicting customer churn with **78% accuracy** using art
 | **Data Processing** | Pandas, NumPy, Joblib |
 | **Reporting** | ReportLab, PDF generation |
 
-## 🚀 Quick Start
-```bash
-git clone https://github.com/yourusername/signalstay.git
-cd signalstay
-pip install -r requirements.txt
-streamlit run app.py
-
-## 📊 Model Performance
-| Metric | Value |
-|--------|-------|
-| Accuracy | 77.54% |
-| Precision | 0.85 (No Churn) / 0.58 (Churn) |
-| ROC AUC | 0.83 |
-
 ## 📂 Project Structure
 ```
 signalstay/

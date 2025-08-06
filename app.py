@@ -216,7 +216,7 @@ if st.button("📊 Predict Churn"):
                       file_name="churn_report.pdf",
                       mime="application/pdf",
                       data=pdf_data
-                         )
+                         ):
         st.success("Report downloaded.")
     
     # --- Output 7: Recommendations ---

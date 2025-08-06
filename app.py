@@ -34,30 +34,31 @@ st.title("📱 Telco Customer Churn Prediction")
 st.sidebar.header("🧾 Customer Profile Input")
 
 # Helper for dropdowns
-def selectbox_with_placeholder(label, options):
-    return st.sidebar.selectbox(label, ["--select--"] + options)
+# Sidebar or main column input (choose location)
+st.sidebar.title("Customer Information")  # You can move this to st.sidebar if preferred
 
-gender = selectbox_with_placeholder("Gender", ["Female", "Male"])
-SeniorCitizen = selectbox_with_placeholder("Senior Citizen", ["No", "Yes"])
-Partner = selectbox_with_placeholder("Partner", ["No", "Yes"])
-Dependents = selectbox_with_placeholder("Dependents", ["No", "Yes"])
-tenure = st.sidebar.slider("Tenure (months)", 0, 72, 12)
-PhoneService = selectbox_with_placeholder("Phone Service", ["No", "Yes"])
-MultipleLines = selectbox_with_placeholder("Multiple Lines", ["No", "Yes", "No phone service"])
-InternetService = selectbox_with_placeholder("Internet Service", ["DSL", "Fiber optic", "No"])
-OnlineSecurity = selectbox_with_placeholder("Online Security", ["No", "Yes", "No internet service"])
-OnlineBackup = selectbox_with_placeholder("Online Backup", ["No", "Yes", "No internet service"])
-DeviceProtection = selectbox_with_placeholder("Device Protection", ["No", "Yes", "No internet service"])
-TechSupport = selectbox_with_placeholder("Tech Support", ["No", "Yes", "No internet service"])
-StreamingTV = selectbox_with_placeholder("Streaming TV", ["No", "Yes", "No internet service"])
-StreamingMovies = selectbox_with_placeholder("Streaming Movies", ["No", "Yes", "No internet service"], index=None)
-Contract = selectbox_with_placeholder("Contract", ["Month-to-month", "One year", "Two year"])
-PaperlessBilling = selectbox_with_placeholder("Paperless Billing", ["No", "Yes"])
-PaymentMethod = selectbox_with_placeholder("Payment Method", [
+gender = st.selectbox("Gender", ["-- Select --", "Female", "Male"])
+SeniorCitizen = st.selectbox("Senior Citizen", ["-- Select --", "Yes", "No"])
+Partner = st.selectbox("Partner", ["-- Select --", "Yes", "No"])
+Dependents = st.selectbox("Dependents", ["-- Select --", "Yes", "No"])
+PhoneService = st.selectbox("Phone Service", ["-- Select --", "Yes", "No"])
+MultipleLines = st.selectbox("Multiple Lines", ["-- Select --", "No", "Yes", "No phone service"])
+InternetService = st.selectbox("Internet Service", ["-- Select --", "DSL", "Fiber optic", "No"])
+OnlineSecurity = st.selectbox("Online Security", ["-- Select --", "No", "Yes", "No internet service"])
+OnlineBackup = st.selectbox("Online Backup", ["-- Select --", "No", "Yes", "No internet service"])
+DeviceProtection = st.selectbox("Device Protection", ["-- Select --", "No", "Yes", "No internet service"])
+TechSupport = st.selectbox("Tech Support", ["-- Select --", "No", "Yes", "No internet service"])
+StreamingTV = st.selectbox("Streaming TV", ["-- Select --", "No", "Yes", "No internet service"])
+StreamingMovies = st.selectbox("Streaming Movies", ["-- Select --", "No", "Yes", "No internet service"])
+Contract = st.selectbox("Contract", ["-- Select --", "Month-to-month", "One year", "Two year"])
+PaperlessBilling = st.selectbox("Paperless Billing", ["-- Select --", "Yes", "No"])
+PaymentMethod = st.selectbox("Payment Method", [
+    "-- Select --",
     "Electronic check", "Mailed check", "Bank transfer (automatic)", "Credit card (automatic)"
 ])
-MonthlyCharges = st.sidebar.number_input("Monthly Charges", min_value=0.0, max_value=200.0, value=70.0)
-TotalCharges = st.sidebar.number_input("Total Charges", min_value=0.0, max_value=20000.0, value=1000.0)
+MonthlyCharges = st.number_input("Monthly Charges", min_value=0.0, step=1.0)
+TotalCharges = st.number_input("Total Charges", min_value=0.0, step=1.0)
+tenure = st.slider("Tenure (in months)", 0, 72, 1)
 
 # If any are "--select--", show warning
 input_list = [gender, SeniorCitizen, Partner, Dependents, PhoneService, MultipleLines,

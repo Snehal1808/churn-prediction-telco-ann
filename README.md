@@ -37,9 +37,9 @@ signalstay/
 ## 📊 Performance Metrics
 | Metric | Value |
 |--------|-------|
-| RMSE   | 1.89  |
-| MAE    | 1.52  |
-| R²     | 0.94  |
+| Test Accuracy   | 77.54%  |
+| Precision    | 0.85 (No Churn) / 0.58 (Churn) |
+| ROC AUC     | 0.83  |
 
 ## 🤝 Contributing
 1. Fork the repository

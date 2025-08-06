@@ -31,7 +31,9 @@ signalstay/
 ├── model.keras            # Trained ANN model
 ├── scaler.pkl             # Feature scaler
 ├── features.pkl           # Feature list
-└── requirements.txt       # Dependencies
+├── requirements.txt       # Dependencies
+├── LICENSE
+└── Readme.md
 ```
 
 ## 📊 Performance Metrics
@@ -49,16 +51,3 @@ Distributed under the MIT License. See [![License: MIT](https://img.shields.io/b
 ## ✉️ Contact
 Snehal Kumar Subudhi - snehalsubu18@gmail.com
 ```
-
-### Key Features Included:
-1. **Project Badges** - Shows tech stack at a glance
-2. **Video Demo Link** - Replace `YOUR_VIDEO_ID` with your actual YouTube ID
-3. **Performance Metrics** - Highlights model accuracy and precision
-4. **Visual Preview** - Add actual screenshot URLs
-5. **Clear Setup Instructions** - With copy-paste commands
-6. **MIT License** - Already matches your existing license file
-
-Would you like me to:
-1. Add a **"Model Training Details"** section?
-2. Include **deployment instructions** for cloud platforms?
-3. Create a **troubleshooting guide** for common issues?

@@ -45,8 +45,7 @@ signalstay/
 Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
 
 ## 📜 License
-Distributed under the MIT License. See `LICENSE` for more information.
-
+Distributed under the MIT License. See [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) for more information.
 ## ✉️ Contact
 Snehal Kumar Subudhi - snehalsubu18@gmail.com
 ```

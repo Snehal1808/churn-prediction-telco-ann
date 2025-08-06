@@ -4,3 +4,6 @@ numpy
 tensorflow
 joblib
 scikit-learn
+matplotlib
+plotly
+reportlab

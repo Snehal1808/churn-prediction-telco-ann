@@ -212,12 +212,14 @@ if st.button("📊 Predict Churn"):
     styled['RiskFlag'] = ["⚠️" if (tenure < 6 or MonthlyCharges > 100 or Contract == 0) else "✅"]
     st.dataframe(styled)
 
-     # --- Output 6: PDF Report ---
-    if st.download_button("📄 Download PDF Report", 
-                      file_name="churn_report.pdf",
-                      mime="application/pdf",
-                      data=lambda: generate_pdf(probability, prediction, tenure, charges, contract)):
-        st.success("Report downloaded.")
+    # --- Output 6: PDF Report ---
+    pdf_data = generate_pdf(probability, prediction, tenure, MonthlyCharges, Contract)
+    st.download_button(
+    label="📄 Download PDF Report",
+    file_name="churn_report.pdf",
+    mime="application/pdf",
+    data=pdf_data
+    )
     
     # --- Output 6: Recommendations ---
     st.subheader("💡 Recommendations")

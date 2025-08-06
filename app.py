@@ -189,15 +189,6 @@ if st.button("📊 Predict Churn"):
                           data=(lambda: generate_pdf(probability, prediction, tenure, MonthlyCharges, Contract))()):
         st.success("Report downloaded.")
 
-    # --- Output 7: Recommendations ---
-    st.subheader("💡 Recommendations")
-    if probability > 0.5:
-        st.markdown("- Offer discounts for long-term contracts.")
-        st.markdown("- Provide personalized customer service follow-ups.")
-        st.markdown("- Address high charges with plan reviews.")
-    else:
-        st.markdown("- Maintain good engagement and proactive support.")
-
 # --- PDF Generation ---
 def generate_pdf(probability, prediction, tenure, charges, contract_code):
     styles = getSampleStyleSheet()
@@ -215,3 +206,12 @@ def generate_pdf(probability, prediction, tenure, charges, contract_code):
     doc.build(report)
     buffer.seek(0)
     return buffer.read()
+    
+    # --- Output 7: Recommendations ---
+    st.subheader("💡 Recommendations")
+    if probability > 0.5:
+        st.markdown("- Offer discounts for long-term contracts.")
+        st.markdown("- Provide personalized customer service follow-ups.")
+        st.markdown("- Address high charges with plan reviews.")
+    else:
+        st.markdown("- Maintain good engagement and proactive support.")

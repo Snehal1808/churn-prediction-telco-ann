@@ -36,6 +36,15 @@ signalstay/
 └── Readme.md
 ```
 
+## Architecture
+```python
+model = Sequential([
+    Dense(units=16, activation='relu', input_shape=(19,)),
+    Dense(units=8, activation='relu'),
+    Dense(units=1, activation='sigmoid')
+])
+```
+
 ## 📊 Performance Metrics
 | Metric | Value |
 |--------|-------|

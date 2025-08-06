@@ -13,7 +13,7 @@ st.set_page_config(page_title="SignalStay", layout="wide")
 
 st.markdown("""
     <h1 style='text-align: center; color: #1E3A8A;'>Signal<span style='color:#14B8A6;'>Stay</span></h1>
-    <h4 style='text-align: center; color: white;'>AI-powered insights into stock market trends.</h4>
+    <h4 style='text-align: center; color: white;'>Predict the exit before they do</h4>
 """, unsafe_allow_html=True)
 
 # --- Load model and preprocessors ---
@@ -224,7 +224,7 @@ if st.button("📊 Predict Churn"):
     data=pdf_data
     )
     
-    # --- Output 6: Recommendations ---
+    # --- Output 7: Recommendations ---
     st.subheader("💡 Recommendations")
     if probability > 0.5:
         st.markdown("- Offer discounts for long-term contracts.")

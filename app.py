@@ -54,8 +54,8 @@ def user_input_features():
     PaymentMethod = select_with_prompt("Payment Method", [
         "Electronic check", "Mailed check", "Bank transfer (automatic)", "Credit card (automatic)"
     ])
-    MonthlyCharges = st.slider("Monthly Charges", 0.0, 150.0, 70.0)
-    TotalCharges = st.slider("Total Charges", 0.0, 10000.0, 1000.0)
+    MonthlyCharges = st.number_input("Monthly Charges", min_value=0.0, max_value=150.0, step=0.1, format="%.2f")
+    TotalCharges = st.number_input("Total Charges", min_value=0.0, max_value=10000.0, step=1.0, format="%.2f")
 
     return pd.DataFrame([{
         "gender": gender,

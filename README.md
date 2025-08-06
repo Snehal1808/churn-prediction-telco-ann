@@ -34,8 +34,12 @@ signalstay/
 └── requirements.txt       # Dependencies
 ```
 
-## 📸 Screenshots
-
+## 📊 Performance Metrics
+| Metric | Value |
+|--------|-------|
+| RMSE   | 1.89  |
+| MAE    | 1.52  |
+| R²     | 0.94  |
 
 ## 🤝 Contributing
 1. Fork the repository
@@ -46,7 +50,7 @@ signalstay/
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ## ✉️ Contact
-Snehal Kumar Subudhi - [@Snehal1808](https://github.com/Snehal1808)
+Snehal Kumar Subudhi - snehalsubu18@gmail.com
 ```
 
 ### Key Features Included:

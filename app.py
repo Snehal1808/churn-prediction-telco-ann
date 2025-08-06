@@ -9,6 +9,13 @@ from io import BytesIO
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 
+st.set_page_config(page_title="MarketLens", layout="wide")
+
+st.markdown("""
+    <h1 style='text-align: center; color: #f94d4d;'>Market<span style='color:#4df98b;'>Lens</span></h1>
+    <h4 style='text-align: center; color: white;'>AI-powered insights into stock market trends.</h4>
+""", unsafe_allow_html=True)
+
 # --- Load model and preprocessors ---
 @st.cache_resource
 def load_model_file():
@@ -25,10 +32,6 @@ def load_features():
 model = load_model_file()
 scaler = load_scaler()
 features = load_features()
-
-# --- Page Setup ---
-st.set_page_config(page_title="Telco Churn Predictor", layout="wide")
-st.title("📱 Telco Customer Churn Prediction")
 
 # --- Input Collection ---
 st.sidebar.header("🧾 Customer Profile Input")

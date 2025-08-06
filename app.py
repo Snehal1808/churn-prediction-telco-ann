@@ -147,16 +147,6 @@ if st.button("📊 Predict Churn"):
     st.write(f"**Churn Probability:** `{probability:.2%}`")
     st.success("✅ Likely to Stay") if prediction == "No (Retain)" else st.error("⚠️ Likely to Churn")
 
-    # --- Output 3: Feature Importance (Static) ---
-    st.subheader("🧠 Feature Importance (Generic)")
-    importance = pd.Series([0.20, 0.15, 0.10, 0.10, 0.05, 0.05, 0.05, 0.03, 0.03, 0.03, 0.02, 0.02, 0.01, 0.01],
-                           index=["Contract", "tenure", "MonthlyCharges", "InternetService", "PaymentMethod",
-                                  "TechSupport", "OnlineSecurity", "StreamingTV", "OnlineBackup",
-                                  "DeviceProtection", "Partner", "SeniorCitizen", "PhoneService", "Dependents"])
-    importance.plot(kind='barh')
-    st.pyplot(plt.gcf())
-    plt.clf()
-
     # --- Output 4: Radar Profile ---
     st.subheader("📊 Customer Profile Radar Chart")
     from math import pi
@@ -188,15 +178,6 @@ if st.button("📊 Predict Churn"):
                           mime="application/pdf",
                           data=(lambda: generate_pdf(probability, prediction, tenure, MonthlyCharges, Contract))()):
         st.success("Report downloaded.")
-
-    # --- Output 7: Recommendations ---
-    st.subheader("💡 Recommendations")
-    if probability > 0.5:
-        st.markdown("- Offer discounts for long-term contracts.")
-        st.markdown("- Provide personalized customer service follow-ups.")
-        st.markdown("- Address high charges with plan reviews.")
-    else:
-        st.markdown("- Maintain good engagement and proactive support.")
 
 # --- PDF Generation ---
 def generate_pdf(probability, prediction, tenure, charges, contract_code):

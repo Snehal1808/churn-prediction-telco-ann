@@ -30,10 +30,7 @@ st.write("Fill out the form below to predict whether a customer will churn.")
 # --- Helper function for empty default ---
 def select_with_prompt(label, options):
     selection = st.selectbox(label, ["-- Select --"] + options)
-    if selection == "-- Select --":
-        st.warning(f"Please select: {label}")
-        st.stop()
-    return selection
+    return selection if selection != "-- Select --" else None
 
 # --- Input Form ---
 def user_input_features():

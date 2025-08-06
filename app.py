@@ -4,10 +4,22 @@ import pandas as pd
 import joblib
 from tensorflow.keras.models import load_model
 
-# Load model, scaler, and features
-model = load_model('model.keras')
-scaler = joblib.load('scaler.pkl')
-features = joblib.load('features.pkl')
+@st.cache_resource
+def load_model_file():
+    return load_model('model.keras')
+
+@st.cache_resource
+def load_scaler():
+    return joblib.load('scaler.pkl')
+
+@st.cache_resource
+def load_features():
+    return joblib.load('features.pkl')
+
+# Load once and cache
+model = load_model_file()
+scaler = load_scaler()
+features = load_features()
 
 st.set_page_config(page_title="Telco Churn Prediction", layout="wide")
 st.title("📱 Telco Customer Churn Prediction")

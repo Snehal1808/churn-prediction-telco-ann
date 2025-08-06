@@ -55,7 +55,7 @@ def user_input_features():
     ])
 
     st.header("📋 Customer Services & Charges")
-    tenure = st.number_input("Tenure (months)", min_value=0, max_value=72, value=12)
+    tenure = st.slider("Tenure (months)", 0, 72, 12)
     MonthlyCharges = st.number_input("Monthly Charges", min_value=0.0, max_value=150.0, value=70.0)
     TotalCharges = st.number_input("Total Charges", min_value=0.0, max_value=10000.0, value=1000.0)
 

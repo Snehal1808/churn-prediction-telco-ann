@@ -42,9 +42,7 @@ signalstay/
 | ROC AUC     | 0.83  |
 
 ## 🤝 Contributing
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Submit a pull request
+Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
 
 ## 📜 License
 Distributed under the MIT License. See `LICENSE` for more information.

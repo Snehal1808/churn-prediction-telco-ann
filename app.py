@@ -27,26 +27,34 @@ st.set_page_config(page_title="Telco Churn Prediction", layout="wide")
 st.title("📱 Telco Customer Churn Prediction")
 st.write("Fill out the form below to predict whether a customer will churn.")
 
+# --- Helper function for empty default ---
+def select_with_prompt(label, options):
+    selection = st.selectbox(label, ["-- Select --"] + options)
+    if selection == "-- Select --":
+        st.warning(f"Please select: {label}")
+        st.stop()
+    return selection
+
 # --- Input Form ---
 def user_input_features():
-    gender = st.selectbox("Gender", ["Female", "Male"])
-    SeniorCitizen_display = st.selectbox("Senior Citizen", ["No", "Yes"])
-    SeniorCitizen = 1 if SeniorCitizen_display == "Yes" else 0
-    Partner = st.selectbox("Partner", ["No", "Yes"])
-    Dependents = st.selectbox("Dependents", ["No", "Yes"])
+    gender = select_with_prompt("Gender", ["Female", "Male"])
+    senior_display = select_with_prompt("Senior Citizen", ["No", "Yes"])
+    SeniorCitizen = 1 if senior_display == "Yes" else 0
+    Partner = select_with_prompt("Partner", ["No", "Yes"])
+    Dependents = select_with_prompt("Dependents", ["No", "Yes"])
     tenure = st.slider("Tenure (months)", 0, 72, 12)
-    PhoneService = st.selectbox("Phone Service", ["No", "Yes"])
-    MultipleLines = st.selectbox("Multiple Lines", ["No", "Yes", "No phone service"])
-    InternetService = st.selectbox("Internet Service", ["DSL", "Fiber optic", "No"])
-    OnlineSecurity = st.selectbox("Online Security", ["No", "Yes", "No internet service"])
-    OnlineBackup = st.selectbox("Online Backup", ["No", "Yes", "No internet service"])
-    DeviceProtection = st.selectbox("Device Protection", ["No", "Yes", "No internet service"])
-    TechSupport = st.selectbox("Tech Support", ["No", "Yes", "No internet service"])
-    StreamingTV = st.selectbox("Streaming TV", ["No", "Yes", "No internet service"])
-    StreamingMovies = st.selectbox("Streaming Movies", ["No", "Yes", "No internet service"])
-    Contract = st.selectbox("Contract", ["Month-to-month", "One year", "Two year"])
-    PaperlessBilling = st.selectbox("Paperless Billing", ["No", "Yes"])
-    PaymentMethod = st.selectbox("Payment Method", [
+    PhoneService = select_with_prompt("Phone Service", ["No", "Yes"])
+    MultipleLines = select_with_prompt("Multiple Lines", ["No", "Yes", "No phone service"])
+    InternetService = select_with_prompt("Internet Service", ["DSL", "Fiber optic", "No"])
+    OnlineSecurity = select_with_prompt("Online Security", ["No", "Yes", "No internet service"])
+    OnlineBackup = select_with_prompt("Online Backup", ["No", "Yes", "No internet service"])
+    DeviceProtection = select_with_prompt("Device Protection", ["No", "Yes", "No internet service"])
+    TechSupport = select_with_prompt("Tech Support", ["No", "Yes", "No internet service"])
+    StreamingTV = select_with_prompt("Streaming TV", ["No", "Yes", "No internet service"])
+    StreamingMovies = select_with_prompt("Streaming Movies", ["No", "Yes", "No internet service"])
+    Contract = select_with_prompt("Contract", ["Month-to-month", "One year", "Two year"])
+    PaperlessBilling = select_with_prompt("Paperless Billing", ["No", "Yes"])
+    PaymentMethod = select_with_prompt("Payment Method", [
         "Electronic check", "Mailed check", "Bank transfer (automatic)", "Credit card (automatic)"
     ])
     MonthlyCharges = st.slider("Monthly Charges", 0.0, 150.0, 70.0)
@@ -137,9 +145,7 @@ if st.button("📊 Predict Churn"):
     st.write(f"**Churn Probability:** {probability:.2%}")
     st.progress(min(int(probability * 100), 100))  # Progress bar
 
-    # Emoji feedback
     if prediction == "Yes (Churn)":
         st.error("⚠️ The customer is likely to churn.")
     else:
         st.success("✅ The customer is likely to stay.")
-

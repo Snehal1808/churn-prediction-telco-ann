@@ -123,17 +123,22 @@ X_scaled = scaler.transform(X)
 # --- PDF Generation ---
 def generate_pdf(probability, prediction, tenure, charges, contract_code):
     styles = getSampleStyleSheet()
+    styleN = styles['Normal']  # ✅ FIXED: Define styleN
     report = []
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer)
+    
     report.append(Paragraph("Customer Churn Prediction Report", styles['Title']))
     report.append(Spacer(1, 12))
-    report.append(Paragraph(f"Prediction: <b>{prediction}</b>", styles['Normal']))
-    report.append(Paragraph(f"Churn Probability: {probability:.2%}", styles['Normal']))
-    report.append(Paragraph(f"Tenure: {tenure} months", styles['Normal']))
-    report.append(Paragraph(f"Monthly Charges: ${charges}", styles['Normal']))
+    report.append(Paragraph(f"Prediction: <b>{prediction}</b>", styleN))
+    report.append(Paragraph(f"Churn Probability: {probability:.2%}", styleN))
+    report.append(Paragraph(f"Tenure: {tenure} months", styleN))
+    report.append(Paragraph(f"Monthly Charges: ${charges}", styleN))
+
+    # ✅ FIXED: contract_code is an integer; map it to actual contract label
     contract = ["Month-to-month", "One year", "Two year"][contract_code]
     report.append(Paragraph(f"Contract: {contract}", styleN))
+
     doc.build(report)
     buffer.seek(0)
     return buffer.read()

@@ -7,9 +7,6 @@
 
 An AI-powered solution predicting customer churn with **78% accuracy** using artificial neural networks. Built for telecom companies to reduce attrition through proactive interventions.
 
-## 🎥 Demo
-[![Video Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://youtu.be/YOUR_VIDEO_ID)
-
 ## ✨ Key Features
 - **Predictive Analytics**: 3-layer ANN model (val_acc: 81.5%)
 - **Interactive Dashboard**: 
@@ -38,11 +35,7 @@ signalstay/
 ```
 
 ## 📸 Screenshots
-| Feature | Preview |
-|---------|---------|
-| **Prediction Dashboard** | ![Dashboard](https://i.imgur.com/dashboard.png) |
-| **Risk Analysis** | ![Risk](https://i.imgur.com/risk.png) |
-| **PDF Report** | ![Report](https://i.imgur.com/report.png) |
+
 
 ## 🤝 Contributing
 1. Fork the repository

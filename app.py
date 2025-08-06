@@ -30,7 +30,8 @@ st.write("Fill out the form below to predict whether a customer will churn.")
 # --- Input Form ---
 def user_input_features():
     gender = st.selectbox("Gender", ["Female", "Male"])
-    SeniorCitizen = st.selectbox("Senior Citizen", [0, 1])
+    SeniorCitizen_display = st.selectbox("Senior Citizen", ["No", "Yes"])
+    SeniorCitizen = 1 if SeniorCitizen_display == "Yes" else 0
     Partner = st.selectbox("Partner", ["No", "Yes"])
     Dependents = st.selectbox("Dependents", ["No", "Yes"])
     tenure = st.slider("Tenure (months)", 0, 72, 12)

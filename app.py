@@ -4,28 +4,30 @@ import pandas as pd
 import joblib
 from tensorflow.keras.models import load_model
 
-@st.cache
+# --- Load model and objects with caching ---
+@st.cache_resource
 def load_model_file():
     return load_model('model.keras')
 
-@st.cache
+@st.cache_resource
 def load_scaler():
     return joblib.load('scaler.pkl')
 
-@st.cache
+@st.cache_resource
 def load_features():
     return joblib.load('features.pkl')
 
-# Load once and cache
+# Load once
 model = load_model_file()
 scaler = load_scaler()
 features = load_features()
 
+# --- Page Config ---
 st.set_page_config(page_title="Telco Churn Prediction", layout="wide")
 st.title("📱 Telco Customer Churn Prediction")
 st.write("Fill out the form below to predict whether a customer will churn.")
 
-# === Input Form === #
+# --- Input Form ---
 def user_input_features():
     gender = st.selectbox("Gender", ["Female", "Male"])
     SeniorCitizen = st.selectbox("Senior Citizen", [0, 1])
@@ -49,8 +51,7 @@ def user_input_features():
     MonthlyCharges = st.slider("Monthly Charges", 0.0, 150.0, 70.0)
     TotalCharges = st.slider("Total Charges", 0.0, 10000.0, 1000.0)
 
-    # Create dictionary
-    data = {
+    return pd.DataFrame([{
         "gender": gender,
         "SeniorCitizen": SeniorCitizen,
         "Partner": Partner,
@@ -70,17 +71,16 @@ def user_input_features():
         "PaymentMethod": PaymentMethod,
         "MonthlyCharges": MonthlyCharges,
         "TotalCharges": TotalCharges
-    }
-    return pd.DataFrame([data])
+    }])
 
-# Get input
+# --- Get user input ---
 input_df = user_input_features()
 
-# Display input
+# --- Display input summary ---
 st.subheader("🔍 Input Summary")
 st.write(input_df)
 
-# Encoding map (match your label encoding used during training)
+# --- Encoding map ---
 label_encodings = {
     "gender": {"Female": 0, "Male": 1},
     "Partner": {"No": 0, "Yes": 1},
@@ -104,20 +104,41 @@ label_encodings = {
     }
 }
 
-# Encode input
+# --- Encode input safely ---
 encoded_input = input_df.copy()
 for col in label_encodings:
-    encoded_input[col] = encoded_input[col].map(label_encodings[col])
+    if col in encoded_input.columns:
+        encoded_input[col] = encoded_input[col].map(label_encodings[col])
+        if encoded_input[col].isnull().any():
+            st.error(f"🚫 Unexpected input in '{col}' — please use valid options.")
+            st.stop()
 
-# Reorder columns and scale
-encoded_input = encoded_input[features]
+# --- Validate feature match ---
+try:
+    encoded_input = encoded_input[features]
+except KeyError as e:
+    st.error(f"Feature mismatch: {e}")
+    st.stop()
+
+# --- Scale input ---
 scaled_input = scaler.transform(encoded_input)
 
-# Predict
+# --- Optional Input Warning ---
+if input_df["tenure"].iloc[0] > 0 and input_df["TotalCharges"].iloc[0] == 0:
+    st.warning("⚠️ Total Charges are 0 despite non-zero tenure. This may affect prediction accuracy.")
+
+# --- Prediction Button ---
 if st.button("📊 Predict Churn"):
-    probability = model.predict(scaled_input)[0][0]
+    probability = float(model.predict(scaled_input).squeeze())
     prediction = "Yes (Churn)" if probability > 0.5 else "No (Retain)"
 
     st.subheader("📈 Prediction Result")
     st.write(f"**Churn Probability:** {probability:.2%}")
-    st.write(f"**Prediction:** {prediction}")
+    st.progress(min(int(probability * 100), 100))  # Progress bar
+
+    # Emoji feedback
+    if prediction == "Yes (Churn)":
+        st.error("⚠️ The customer is likely to churn.")
+    else:
+        st.success("✅ The customer is likely to stay.")
+

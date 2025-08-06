@@ -3,17 +3,13 @@ import numpy as np
 import pandas as pd
 import joblib
 from tensorflow.keras.models import load_model
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+from io import BytesIO
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
 
-st.set_page_config(page_title="SignalStay", layout="wide")
-
-st.markdown("""
-    <h1 style='text-align: center; color: #1E3A8A;'>Signal<span style='color:#14B8A6;'>Lens</span></h1>
-    <h4 style='text-align: center; color: white;'>Know Who’s Leaving—Before They Do.</h4>
-""", unsafe_allow_html=True)
-
-st.write("Fill out the form below to predict whether a customer will churn.")
-
-# --- Load model and objects with caching ---
+# --- Load model and preprocessors ---
 @st.cache_resource
 def load_model_file():
     return load_model('model.keras')
@@ -26,74 +22,75 @@ def load_scaler():
 def load_features():
     return joblib.load('features.pkl')
 
-# Load once
 model = load_model_file()
 scaler = load_scaler()
 features = load_features()
 
-# --- Helper function for empty default ---
-def select_with_prompt(label, options):
-    selection = st.selectbox(label, ["-- Select --"] + options)
-    return selection if selection != "-- Select --" else None
+# --- Page Setup ---
+st.set_page_config(page_title="Telco Churn Predictor", layout="wide")
+st.title("📱 Telco Customer Churn Prediction")
 
-# --- Input Form ---
-def user_input_features():
-    st.sidebar.header("🧾 Customer Profile")
-    gender = st.sidebar.selectbox("Gender", ["Female", "Male"])
-    SeniorCitizen = st.sidebar.selectbox("Senior Citizen", ["No", "Yes"])
-    Partner = st.sidebar.selectbox("Partner", ["No", "Yes"])
-    Dependents = st.sidebar.selectbox("Dependents", ["No", "Yes"])
-    PhoneService = st.sidebar.selectbox("Phone Service", ["No", "Yes"])
-    InternetService = st.sidebar.selectbox("Internet Service", ["DSL", "Fiber optic", "No"])
-    Contract = st.sidebar.selectbox("Contract", ["Month-to-month", "One year", "Two year"])
-    PaperlessBilling = st.sidebar.selectbox("Paperless Billing", ["No", "Yes"])
-    PaymentMethod = st.sidebar.selectbox("Payment Method", [
-        "Electronic check", "Mailed check", "Bank transfer (automatic)", "Credit card (automatic)"
-    ])
+# --- Input Collection ---
+st.sidebar.header("🧾 Customer Profile Input")
 
-    st.header("📋 Customer Services & Charges")
-    tenure = st.slider("Tenure (months)", 0, 72, 12)
-    MonthlyCharges = st.number_input("Monthly Charges", min_value=0.0, max_value=150.0, value=70.0)
-    TotalCharges = st.number_input("Total Charges", min_value=0.0, max_value=10000.0, value=1000.0)
+# Helper for dropdowns
+def selectbox_with_placeholder(label, options):
+    return st.sidebar.selectbox(label, ["--select--"] + options)
 
-    MultipleLines = st.selectbox("Multiple Lines", ["No", "Yes", "No phone service"])
-    OnlineSecurity = st.selectbox("Online Security", ["No", "Yes", "No internet service"])
-    OnlineBackup = st.selectbox("Online Backup", ["No", "Yes", "No internet service"])
-    DeviceProtection = st.selectbox("Device Protection", ["No", "Yes", "No internet service"])
-    TechSupport = st.selectbox("Tech Support", ["No", "Yes", "No internet service"])
-    StreamingTV = st.selectbox("Streaming TV", ["No", "Yes", "No internet service"])
-    StreamingMovies = st.selectbox("Streaming Movies", ["No", "Yes", "No internet service"])
+gender = selectbox_with_placeholder("Gender", ["Female", "Male"])
+SeniorCitizen = selectbox_with_placeholder("Senior Citizen", ["No", "Yes"])
+Partner = selectbox_with_placeholder("Partner", ["No", "Yes"])
+Dependents = selectbox_with_placeholder("Dependents", ["No", "Yes"])
+tenure = st.sidebar.slider("Tenure (months)", 0, 72, 12)
+PhoneService = selectbox_with_placeholder("Phone Service", ["No", "Yes"])
+MultipleLines = selectbox_with_placeholder("Multiple Lines", ["No", "Yes", "No phone service"])
+InternetService = selectbox_with_placeholder("Internet Service", ["DSL", "Fiber optic", "No"])
+OnlineSecurity = selectbox_with_placeholder("Online Security", ["No", "Yes", "No internet service"])
+OnlineBackup = selectbox_with_placeholder("Online Backup", ["No", "Yes", "No internet service"])
+DeviceProtection = selectbox_with_placeholder("Device Protection", ["No", "Yes", "No internet service"])
+TechSupport = selectbox_with_placeholder("Tech Support", ["No", "Yes", "No internet service"])
+StreamingTV = selectbox_with_placeholder("Streaming TV", ["No", "Yes", "No internet service"])
+StreamingMovies = selectbox_with_placeholder("Streaming Movies", ["No", "Yes", "No internet service"])
+Contract = selectbox_with_placeholder("Contract", ["Month-to-month", "One year", "Two year"])
+PaperlessBilling = selectbox_with_placeholder("Paperless Billing", ["No", "Yes"])
+PaymentMethod = selectbox_with_placeholder("Payment Method", [
+    "Electronic check", "Mailed check", "Bank transfer (automatic)", "Credit card (automatic)"
+])
+MonthlyCharges = st.sidebar.number_input("Monthly Charges", min_value=0.0, max_value=200.0, value=70.0)
+TotalCharges = st.sidebar.number_input("Total Charges", min_value=0.0, max_value=20000.0, value=1000.0)
 
-    return pd.DataFrame([{
-        "gender": gender,
-        "SeniorCitizen": 1 if SeniorCitizen == "Yes" else 0,
-        "Partner": Partner,
-        "Dependents": Dependents,
-        "tenure": tenure,
-        "PhoneService": PhoneService,
-        "MultipleLines": MultipleLines,
-        "InternetService": InternetService,
-        "OnlineSecurity": OnlineSecurity,
-        "OnlineBackup": OnlineBackup,
-        "DeviceProtection": DeviceProtection,
-        "TechSupport": TechSupport,
-        "StreamingTV": StreamingTV,
-        "StreamingMovies": StreamingMovies,
-        "Contract": Contract,
-        "PaperlessBilling": PaperlessBilling,
-        "PaymentMethod": PaymentMethod,
-        "MonthlyCharges": MonthlyCharges,
-        "TotalCharges": TotalCharges
-    }])
+# If any are "--select--", show warning
+input_list = [gender, SeniorCitizen, Partner, Dependents, PhoneService, MultipleLines,
+              InternetService, OnlineSecurity, OnlineBackup, DeviceProtection, TechSupport,
+              StreamingTV, StreamingMovies, Contract, PaperlessBilling, PaymentMethod]
+if any(i == "--select--" for i in input_list):
+    st.warning("⚠️ Please fill all fields in the sidebar to proceed.")
+    st.stop()
 
-# --- Get user input ---
-input_df = user_input_features()
+# Map inputs
+data = pd.DataFrame([{
+    "gender": gender,
+    "SeniorCitizen": 1 if SeniorCitizen == "Yes" else 0,
+    "Partner": Partner,
+    "Dependents": Dependents,
+    "tenure": tenure,
+    "PhoneService": PhoneService,
+    "MultipleLines": MultipleLines,
+    "InternetService": InternetService,
+    "OnlineSecurity": OnlineSecurity,
+    "OnlineBackup": OnlineBackup,
+    "DeviceProtection": DeviceProtection,
+    "TechSupport": TechSupport,
+    "StreamingTV": StreamingTV,
+    "StreamingMovies": StreamingMovies,
+    "Contract": Contract,
+    "PaperlessBilling": PaperlessBilling,
+    "PaymentMethod": PaymentMethod,
+    "MonthlyCharges": MonthlyCharges,
+    "TotalCharges": TotalCharges
+}])
 
-# --- Display input summary ---
-st.subheader("🔍 Input Summary")
-st.write(input_df)
-
-# --- Encoding map ---
+# Encoding
 label_encodings = {
     "gender": {"Female": 0, "Male": 1},
     "Partner": {"No": 0, "Yes": 1},
@@ -116,40 +113,105 @@ label_encodings = {
         "Credit card (automatic)": 3
     }
 }
+for col, mapping in label_encodings.items():
+    data[col] = data[col].map(mapping)
 
-# --- Encode input safely ---
-encoded_input = input_df.copy()
-for col in label_encodings:
-    if col in encoded_input.columns:
-        encoded_input[col] = encoded_input[col].map(label_encodings[col])
-        if encoded_input[col].isnull().any():
-            st.error(f"🚫 Unexpected input in '{col}' — please use valid options.")
-            st.stop()
+# Reorder and scale
+X = data[features]
+X_scaled = scaler.transform(X)
 
-# --- Validate feature match ---
-try:
-    encoded_input = encoded_input[features]
-except KeyError as e:
-    st.error(f"Feature mismatch: {e}")
-    st.stop()
-
-# --- Scale input ---
-scaled_input = scaler.transform(encoded_input)
-
-# --- Optional Input Warning ---
-if input_df["tenure"].iloc[0] > 0 and input_df["TotalCharges"].iloc[0] == 0:
-    st.warning("⚠️ Total Charges are 0 despite non-zero tenure. This may affect prediction accuracy.")
-
-# --- Prediction Button ---
+# Predict
 if st.button("📊 Predict Churn"):
-    probability = float(model.predict(scaled_input).squeeze())
+    probability = float(model.predict(X_scaled).squeeze())
     prediction = "Yes (Churn)" if probability > 0.5 else "No (Retain)"
 
-    st.subheader("📈 Prediction Result")
-    st.write(f"**Churn Probability:** {probability:.2%}")
-    st.progress(min(int(probability * 100), 100))  # Progress bar
+    # --- Output 1: Churn Gauge ---
+    fig = go.Figure(go.Indicator(
+        mode="gauge+number+delta",
+        value=probability * 100,
+        domain={'x': [0, 1], 'y': [0, 1]},
+        title={'text': "Churn Probability (%)"},
+        gauge={
+            'axis': {'range': [0, 100]},
+            'bar': {'color': "red" if probability > 0.5 else "green"},
+            'steps': [
+                {'range': [0, 50], 'color': "lightgreen"},
+                {'range': [50, 100], 'color': "lightcoral"}
+            ],
+        }
+    ))
+    st.plotly_chart(fig)
 
-    if prediction == "Yes (Churn)":
-        st.error("⚠️ The customer is likely to churn.")
+    # --- Output 2: Risk Bar ---
+    st.subheader("📈 Prediction Result")
+    st.write(f"**Churn Probability:** `{probability:.2%}`")
+    st.success("✅ Likely to Stay") if prediction == "No (Retain)" else st.error("⚠️ Likely to Churn")
+
+    # --- Output 3: Feature Importance (Static) ---
+    st.subheader("🧠 Feature Importance (Generic)")
+    importance = pd.Series([0.20, 0.15, 0.10, 0.10, 0.05, 0.05, 0.05, 0.03, 0.03, 0.03, 0.02, 0.02, 0.01, 0.01],
+                           index=["Contract", "tenure", "MonthlyCharges", "InternetService", "PaymentMethod",
+                                  "TechSupport", "OnlineSecurity", "StreamingTV", "OnlineBackup",
+                                  "DeviceProtection", "Partner", "SeniorCitizen", "PhoneService", "Dependents"])
+    importance.plot(kind='barh')
+    st.pyplot(plt.gcf())
+    plt.clf()
+
+    # --- Output 4: Radar Profile ---
+    st.subheader("📊 Customer Profile Radar Chart")
+    from math import pi
+    radar_df = pd.DataFrame({
+        'Metric': ['tenure', 'MonthlyCharges', 'TotalCharges'],
+        'Value': [tenure/72, MonthlyCharges/150, TotalCharges/10000]
+    })
+    categories = list(radar_df['Metric'])
+    values = radar_df['Value'].tolist()
+    values += values[:1]
+    angles = [n / float(len(categories)) * 2 * pi for n in range(len(categories))]
+    angles += angles[:1]
+    fig_radar = plt.figure()
+    ax = plt.subplot(111, polar=True)
+    ax.plot(angles, values, linewidth=2, linestyle='solid')
+    ax.fill(angles, values, alpha=0.4)
+    ax.set_thetagrids([a * 180/np.pi for a in angles[:-1]], categories)
+    st.pyplot(fig_radar)
+    plt.clf()
+
+    # --- Output 5: Risk Summary Table ---
+    st.subheader("📋 Input Summary with Highlights")
+    styled = data.copy()
+    styled['RiskFlag'] = ["⚠️" if (tenure < 6 or MonthlyCharges > 100 or Contract == 0) else "✅"]
+    st.dataframe(styled)
+
+    # --- Output 6: PDF Report ---
+    if st.download_button("⬇️ Download PDF Report", file_name="Churn_Report.pdf",
+                          mime="application/pdf",
+                          data=(lambda: generate_pdf(probability, prediction, tenure, MonthlyCharges, Contract))()):
+        st.success("Report downloaded.")
+
+    # --- Output 7: Recommendations ---
+    st.subheader("💡 Recommendations")
+    if probability > 0.5:
+        st.markdown("- Offer discounts for long-term contracts.")
+        st.markdown("- Provide personalized customer service follow-ups.")
+        st.markdown("- Address high charges with plan reviews.")
     else:
-        st.success("✅ The customer is likely to stay.")
+        st.markdown("- Maintain good engagement and proactive support.")
+
+# --- PDF Generation ---
+def generate_pdf(probability, prediction, tenure, charges, contract_code):
+    styles = getSampleStyleSheet()
+    report = []
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer)
+    report.append(Paragraph("Customer Churn Prediction Report", styles['Title']))
+    report.append(Spacer(1, 12))
+    report.append(Paragraph(f"Prediction: <b>{prediction}</b>", styles['Normal']))
+    report.append(Paragraph(f"Churn Probability: {probability:.2%}", styles['Normal']))
+    report.append(Paragraph(f"Tenure: {tenure} months", styles['Normal']))
+    report.append(Paragraph(f"Monthly Charges: ${charges}", styles['Normal']))
+    contract = ["Month-to-month", "One year", "Two year"][contract_code]
+    report.append(Paragraph(f"Contract: {contract}", styles['Normal']))
+    doc.build(report)
+    buffer.seek(0)
+    return buffer.read()

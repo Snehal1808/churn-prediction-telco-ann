@@ -1,10 +1,5 @@
 # 📊 SignalStay - Customer Churn Prediction System
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.12+-orange)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.25+-red)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
 An AI-powered solution predicting customer churn with **78% accuracy** using artificial neural networks. Built for telecom companies to reduce attrition through proactive interventions.
 
 ## ✨ Key Features
@@ -15,6 +10,10 @@ An AI-powered solution predicting customer churn with **78% accuracy** using art
   - Feature importance visualization
 - **Automated Reporting**: PDF generation with risk analysis
 - **Actionable Insights**: Retention recommendations
+
+## 🚀 Try It Now!  
+The app is live on Streamlit—no installation needed!  
+👉 **[Launch App](https://marketlens18.streamlit.app/)**
 
 ## 🛠 Tech Stack
 | Component | Technologies |

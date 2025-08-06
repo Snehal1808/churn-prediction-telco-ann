@@ -1,6 +1,3 @@
-Here's a comprehensive **README.md** for your customer churn prediction project:
-
-```markdown
 # 📊 SignalStay - Customer Churn Prediction System
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue)
@@ -36,7 +33,6 @@ git clone https://github.com/yourusername/signalstay.git
 cd signalstay
 pip install -r requirements.txt
 streamlit run app.py
-```
 
 ## 📊 Model Performance
 | Metric | Value |

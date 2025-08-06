@@ -133,7 +133,7 @@ def generate_pdf(probability, prediction, tenure, charges, contract_code):
     report.append(Paragraph(f"Tenure: {tenure} months", styles['Normal']))
     report.append(Paragraph(f"Monthly Charges: ${charges}", styles['Normal']))
     contract = ["Month-to-month", "One year", "Two year"][contract_code]
-    report.append(Paragraph(f"Contract: {contract}", styles['Normal']))
+    report.append(Paragraph(f"Contract: {contract}", styleN))
     doc.build(report)
     buffer.seek(0)
     return buffer.read()

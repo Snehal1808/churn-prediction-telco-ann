@@ -4,15 +4,15 @@ import pandas as pd
 import joblib
 from tensorflow.keras.models import load_model
 
-@st.cache_resource
+@st.cache
 def load_model_file():
     return load_model('model.keras')
 
-@st.cache_resource
+@st.cache
 def load_scaler():
     return joblib.load('scaler.pkl')
 
-@st.cache_resource
+@st.cache
 def load_features():
     return joblib.load('features.pkl')
 

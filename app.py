@@ -11,6 +11,8 @@ st.markdown("""
     <h4 style='text-align: center; color: white;'>Know Who’s Leaving—Before They Do.</h4>
 """, unsafe_allow_html=True)
 
+st.write("Fill out the form below to predict whether a customer will churn.")
+
 # --- Load model and objects with caching ---
 @st.cache_resource
 def load_model_file():
@@ -28,11 +30,6 @@ def load_features():
 model = load_model_file()
 scaler = load_scaler()
 features = load_features()
-
-# --- Page Config ---
-st.set_page_config(page_title="Telco Churn Prediction", layout="wide")
-st.title("📱 Telco Customer Churn Prediction")
-st.write("Fill out the form below to predict whether a customer will churn.")
 
 # --- Helper function for empty default ---
 def select_with_prompt(label, options):

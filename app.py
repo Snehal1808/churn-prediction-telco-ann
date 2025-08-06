@@ -213,7 +213,7 @@ if st.button("📊 Predict Churn"):
                       file_name="churn_report.pdf",
                       mime="application/pdf",
                       data=lambda: generate_pdf(probability, prediction, tenure, charges, contract)):
-    st.success("Report downloaded.")
+        st.success("Report downloaded.")
     
     # --- Output 7: Recommendations ---
     st.subheader("💡 Recommendations")

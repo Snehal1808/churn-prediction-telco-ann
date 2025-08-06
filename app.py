@@ -9,10 +9,10 @@ from io import BytesIO
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 
-st.set_page_config(page_title="MarketLens", layout="wide")
+st.set_page_config(page_title="SignalStay", layout="wide")
 
 st.markdown("""
-    <h1 style='text-align: center; color: #1E3A8A;'>Market<span style='color:#14B8A6;'>Lens</span></h1>
+    <h1 style='text-align: center; color: #1E3A8A;'>Signal<span style='color:#14B8A6;'>Stay</span></h1>
     <h4 style='text-align: center; color: white;'>AI-powered insights into stock market trends.</h4>
 """, unsafe_allow_html=True)
 

@@ -125,6 +125,24 @@ if st.button("📊 Predict Churn"):
     probability = float(model.predict(X_scaled).squeeze())
     prediction = "Yes (Churn)" if probability > 0.5 else "No (Retain)"
 
+# --- PDF Generation ---
+def generate_pdf(probability, prediction, tenure, charges, contract_code):
+    styles = getSampleStyleSheet()
+    report = []
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer)
+    report.append(Paragraph("Customer Churn Prediction Report", styles['Title']))
+    report.append(Spacer(1, 12))
+    report.append(Paragraph(f"Prediction: <b>{prediction}</b>", styles['Normal']))
+    report.append(Paragraph(f"Churn Probability: {probability:.2%}", styles['Normal']))
+    report.append(Paragraph(f"Tenure: {tenure} months", styles['Normal']))
+    report.append(Paragraph(f"Monthly Charges: ${charges}", styles['Normal']))
+    contract = ["Month-to-month", "One year", "Two year"][contract_code]
+    report.append(Paragraph(f"Contract: {contract}", styles['Normal']))
+    doc.build(report)
+    buffer.seek(0)
+    return buffer.read()
+
     # --- Output 1: Churn Gauge ---
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
@@ -188,24 +206,6 @@ if st.button("📊 Predict Churn"):
                           mime="application/pdf",
                           data=(lambda: generate_pdf(probability, prediction, tenure, MonthlyCharges, Contract))()):
         st.success("Report downloaded.")
-
-# --- PDF Generation ---
-def generate_pdf(probability, prediction, tenure, charges, contract_code):
-    styles = getSampleStyleSheet()
-    report = []
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer)
-    report.append(Paragraph("Customer Churn Prediction Report", styles['Title']))
-    report.append(Spacer(1, 12))
-    report.append(Paragraph(f"Prediction: <b>{prediction}</b>", styles['Normal']))
-    report.append(Paragraph(f"Churn Probability: {probability:.2%}", styles['Normal']))
-    report.append(Paragraph(f"Tenure: {tenure} months", styles['Normal']))
-    report.append(Paragraph(f"Monthly Charges: ${charges}", styles['Normal']))
-    contract = ["Month-to-month", "One year", "Two year"][contract_code]
-    report.append(Paragraph(f"Contract: {contract}", styles['Normal']))
-    doc.build(report)
-    buffer.seek(0)
-    return buffer.read()
     
     # --- Output 7: Recommendations ---
     st.subheader("💡 Recommendations")

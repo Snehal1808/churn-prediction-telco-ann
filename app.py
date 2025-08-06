@@ -51,7 +51,7 @@ OnlineBackup = selectbox_with_placeholder("Online Backup", ["No", "Yes", "No int
 DeviceProtection = selectbox_with_placeholder("Device Protection", ["No", "Yes", "No internet service"])
 TechSupport = selectbox_with_placeholder("Tech Support", ["No", "Yes", "No internet service"])
 StreamingTV = selectbox_with_placeholder("Streaming TV", ["No", "Yes", "No internet service"])
-StreamingMovies = selectbox_with_placeholder("Streaming Movies", ["No", "Yes", "No internet service"], index=None)
+StreamingMovies = selectbox_with_placeholder("Streaming Movies", ["No", "Yes", "No internet service"])
 Contract = selectbox_with_placeholder("Contract", ["Month-to-month", "One year", "Two year"])
 PaperlessBilling = selectbox_with_placeholder("Paperless Billing", ["No", "Yes"])
 PaymentMethod = selectbox_with_placeholder("Payment Method", [

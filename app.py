@@ -146,7 +146,10 @@ if st.button("📊 Predict Churn"):
     # --- Output 2: Risk Bar ---
     st.subheader("📈 Prediction Result")
     st.write(f"**Churn Probability:** `{probability:.2%}`")
-    st.success("✅ Likely to Stay") if prediction == "No (Retain)" else st.error("⚠️ Likely to Churn")
+   if prediction == "No (Retain)":
+       st.success("✅ Likely to Stay")
+    else:
+        st.error("⚠️ Likely to Churn")
 
     # --- Output 3: Feature Importance (Static) ---
     st.subheader("🧠 Feature Importance (Generic)")

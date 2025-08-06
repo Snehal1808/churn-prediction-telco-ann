@@ -210,10 +210,13 @@ if st.button("📊 Predict Churn"):
     st.dataframe(styled)
 
     # --- Output 6: PDF Report ---
+    pdf_data = generate_pdf(probability, prediction, input_dict)
+    
     if st.download_button("📄 Download PDF Report", 
                       file_name="churn_report.pdf",
                       mime="application/pdf",
-                      data=lambda: generate_pdf(probability, prediction, tenure, charges, contract)):
+                      data=pdf_data
+                         )
         st.success("Report downloaded.")
     
     # --- Output 7: Recommendations ---

@@ -50,7 +50,7 @@ OnlineBackup = selectbox_with_placeholder("Online Backup", ["No", "Yes", "No int
 DeviceProtection = selectbox_with_placeholder("Device Protection", ["No", "Yes", "No internet service"])
 TechSupport = selectbox_with_placeholder("Tech Support", ["No", "Yes", "No internet service"])
 StreamingTV = selectbox_with_placeholder("Streaming TV", ["No", "Yes", "No internet service"])
-StreamingMovies = selectbox_with_placeholder("Streaming Movies", ["No", "Yes", "No internet service"])
+StreamingMovies = selectbox_with_placeholder("Streaming Movies", ["No", "Yes", "No internet service"], index=None)
 Contract = selectbox_with_placeholder("Contract", ["Month-to-month", "One year", "Two year"])
 PaperlessBilling = selectbox_with_placeholder("Paperless Billing", ["No", "Yes"])
 PaymentMethod = selectbox_with_placeholder("Payment Method", [
@@ -121,23 +121,25 @@ X = data[features]
 X_scaled = scaler.transform(X)
 
 # --- PDF Generation ---
-def generate_pdf(probability, prediction, tenure, charges, contract_code):
+def generate_pdf(probability, prediction, tenure, charges, contract):
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+    from reportlab.lib.styles import getSampleStyleSheet
+    from io import BytesIO
+
     styles = getSampleStyleSheet()
-    styleN = styles['Normal']  # ✅ FIXED: Define styleN
-    report = []
+    styleN = styles['Normal']
+
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer)
-    
+    report = []
+
     report.append(Paragraph("Customer Churn Prediction Report", styles['Title']))
     report.append(Spacer(1, 12))
     report.append(Paragraph(f"Prediction: <b>{prediction}</b>", styleN))
     report.append(Paragraph(f"Churn Probability: {probability:.2%}", styleN))
     report.append(Paragraph(f"Tenure: {tenure} months", styleN))
     report.append(Paragraph(f"Monthly Charges: ${charges}", styleN))
-
-    # ✅ FIXED: contract_code is an integer; map it to actual contract label
-    contract = ["Month-to-month", "One year", "Two year"][contract_code]
-    report.append(Paragraph(f"Contract: {contract}", styleN))
+    report.append(Paragraph(f"Contract: {contract}", styleN))  # ✅ Here: contract is a string now
 
     doc.build(report)
     buffer.seek(0)
@@ -207,10 +209,11 @@ if st.button("📊 Predict Churn"):
     st.dataframe(styled)
 
     # --- Output 6: PDF Report ---
-    if st.download_button("⬇️ Download PDF Report", file_name="Churn_Report.pdf",
-                          mime="application/pdf",
-                          data=(lambda: generate_pdf(probability, prediction, tenure, MonthlyCharges, Contract))()):
-        st.success("Report downloaded.")
+    if st.download_button("📄 Download PDF Report", 
+                      file_name="churn_report.pdf",
+                      mime="application/pdf",
+                      data=lambda: generate_pdf(probability, prediction, tenure, charges, contract)):
+    st.success("Report downloaded.")
     
     # --- Output 7: Recommendations ---
     st.subheader("💡 Recommendations")

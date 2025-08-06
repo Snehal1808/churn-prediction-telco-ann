@@ -120,11 +120,6 @@ for col, mapping in label_encodings.items():
 X = data[features]
 X_scaled = scaler.transform(X)
 
-# Predict
-if st.button("📊 Predict Churn"):
-    probability = float(model.predict(X_scaled).squeeze())
-    prediction = "Yes (Churn)" if probability > 0.5 else "No (Retain)"
-
 # --- PDF Generation ---
 def generate_pdf(probability, prediction, tenure, charges, contract_code):
     styles = getSampleStyleSheet()
@@ -142,6 +137,11 @@ def generate_pdf(probability, prediction, tenure, charges, contract_code):
     doc.build(report)
     buffer.seek(0)
     return buffer.read()
+
+# Predict
+if st.button("📊 Predict Churn"):
+    probability = float(model.predict(X_scaled).squeeze())
+    prediction = "Yes (Churn)" if probability > 0.5 else "No (Retain)"
 
     # --- Output 1: Churn Gauge ---
     fig = go.Figure(go.Indicator(

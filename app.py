@@ -16,7 +16,7 @@ st.markdown("""
     <h4 style='text-align: center; color: white;'>Predict the exit before they do</h4>
 """, unsafe_allow_html=True)
 
-# --- Load model and preprocessors ---
+#Load model and preprocessors
 @st.cache_resource
 def load_model_file():
     return load_model('model.keras')
@@ -33,7 +33,7 @@ model = load_model_file()
 scaler = load_scaler()
 features = load_features()
 
-# --- Input Collection ---
+# Input Collection
 st.sidebar.header("🧾 Customer Profile Input")
 
 # Helper for dropdowns
@@ -124,7 +124,7 @@ for col, mapping in label_encodings.items():
 X = data[features]
 X_scaled = scaler.transform(X)
 
-# --- PDF Generation ---
+# PDF Generation
 def generate_pdf(probability, prediction, tenure, charges, contract):
     from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
     from reportlab.lib.styles import getSampleStyleSheet
@@ -154,7 +154,7 @@ if st.button("📊 Predict Churn"):
     probability = float(model.predict(X_scaled).squeeze())
     prediction = "Yes (Churn)" if probability > 0.5 else "No (Retain)"
 
-    # --- Output 1: Churn Gauge ---
+    # Output 1: Churn Gauge
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
         value=probability * 100,
@@ -171,7 +171,7 @@ if st.button("📊 Predict Churn"):
     ))
     st.plotly_chart(fig)
 
-    # --- Output 2: Risk Bar ---
+    # Output 2: Risk Bar
     st.subheader("📈 Prediction Result")
     st.write(f"**Churn Probability:** `{probability:.2%}`")
     if prediction == "No (Retain)":
@@ -179,7 +179,7 @@ if st.button("📊 Predict Churn"):
     else:
         st.error("⚠️ Likely to Churn")
 
-    # --- Output 3: Feature Importance (Static) ---
+    # Output 3: Feature Importance (Static)
     st.subheader("🧠 Feature Importance (Generic)")
     importance = pd.Series([0.20, 0.15, 0.10, 0.10, 0.05, 0.05, 0.05, 0.03, 0.03, 0.03, 0.02, 0.02, 0.01, 0.01],
                            index=["Contract", "tenure", "MonthlyCharges", "InternetService", "PaymentMethod",
@@ -189,7 +189,7 @@ if st.button("📊 Predict Churn"):
     st.pyplot(plt.gcf())
     plt.clf()
 
-    # --- Output 4: Radar Profile ---
+    # Output 4: Radar Profile
     st.subheader("📊 Customer Profile Radar Chart")
     from math import pi
     radar_df = pd.DataFrame({
@@ -209,13 +209,13 @@ if st.button("📊 Predict Churn"):
     st.pyplot(fig_radar)
     plt.clf()
 
-    # --- Output 5: Risk Summary Table ---
+    # Output 5: Risk Summary Table
     st.subheader("📋 Input Summary with Highlights")
     styled = data.copy()
     styled['RiskFlag'] = ["⚠️" if (tenure < 6 or MonthlyCharges > 100 or Contract == 0) else "✅"]
     st.dataframe(styled)
 
-    # --- Output 6: PDF Report ---
+    # Output 6: PDF Report
     pdf_data = generate_pdf(probability, prediction, tenure, MonthlyCharges, Contract)
     st.download_button(
     label="📄 Download PDF Report",
@@ -224,7 +224,7 @@ if st.button("📊 Predict Churn"):
     data=pdf_data
     )
     
-    # --- Output 7: Recommendations ---
+    # Output 7: Recommendations
     st.subheader("💡 Recommendations")
     if probability > 0.5:
         st.markdown("- Offer discounts for long-term contracts.")

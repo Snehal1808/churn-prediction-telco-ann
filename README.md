@@ -13,7 +13,7 @@ An AI-powered solution predicting customer churn with **78% accuracy** using art
 
 ## 🚀 Try It Now!  
 The app is live on Streamlit—no installation needed!  
-👉 **[Launch App](https://marketlens18.streamlit.app/)**
+👉 **[Launch App](https://signalstay.streamlit.app/)**
 
 ## 🛠 Tech Stack
 | Component | Technologies |

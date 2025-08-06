@@ -41,32 +41,35 @@ def select_with_prompt(label, options):
 
 # --- Input Form ---
 def user_input_features():
-    gender = select_with_prompt("Gender", ["Female", "Male"])
-    senior_display = select_with_prompt("Senior Citizen", ["No", "Yes"])
-    SeniorCitizen = 1 if senior_display == "Yes" else 0
-    Partner = select_with_prompt("Partner", ["No", "Yes"])
-    Dependents = select_with_prompt("Dependents", ["No", "Yes"])
-    tenure = st.slider("Tenure (months)", 0, 72, 12)
-    PhoneService = select_with_prompt("Phone Service", ["No", "Yes"])
-    MultipleLines = select_with_prompt("Multiple Lines", ["No", "Yes", "No phone service"])
-    InternetService = select_with_prompt("Internet Service", ["DSL", "Fiber optic", "No"])
-    OnlineSecurity = select_with_prompt("Online Security", ["No", "Yes", "No internet service"])
-    OnlineBackup = select_with_prompt("Online Backup", ["No", "Yes", "No internet service"])
-    DeviceProtection = select_with_prompt("Device Protection", ["No", "Yes", "No internet service"])
-    TechSupport = select_with_prompt("Tech Support", ["No", "Yes", "No internet service"])
-    StreamingTV = select_with_prompt("Streaming TV", ["No", "Yes", "No internet service"])
-    StreamingMovies = select_with_prompt("Streaming Movies", ["No", "Yes", "No internet service"])
-    Contract = select_with_prompt("Contract", ["Month-to-month", "One year", "Two year"])
-    PaperlessBilling = select_with_prompt("Paperless Billing", ["No", "Yes"])
-    PaymentMethod = select_with_prompt("Payment Method", [
+    st.sidebar.header("🧾 Customer Profile")
+    gender = st.sidebar.selectbox("Gender", ["Female", "Male"])
+    SeniorCitizen = st.sidebar.selectbox("Senior Citizen", ["No", "Yes"])
+    Partner = st.sidebar.selectbox("Partner", ["No", "Yes"])
+    Dependents = st.sidebar.selectbox("Dependents", ["No", "Yes"])
+    PhoneService = st.sidebar.selectbox("Phone Service", ["No", "Yes"])
+    InternetService = st.sidebar.selectbox("Internet Service", ["DSL", "Fiber optic", "No"])
+    Contract = st.sidebar.selectbox("Contract", ["Month-to-month", "One year", "Two year"])
+    PaperlessBilling = st.sidebar.selectbox("Paperless Billing", ["No", "Yes"])
+    PaymentMethod = st.sidebar.selectbox("Payment Method", [
         "Electronic check", "Mailed check", "Bank transfer (automatic)", "Credit card (automatic)"
     ])
-    MonthlyCharges = st.number_input("Monthly Charges", min_value=0.0, max_value=150.0, step=0.1, format="%.2f")
-    TotalCharges = st.number_input("Total Charges", min_value=0.0, max_value=10000.0, step=1.0, format="%.2f")
+
+    st.header("📋 Customer Services & Charges")
+    tenure = st.number_input("Tenure (months)", min_value=0, max_value=72, value=12)
+    MonthlyCharges = st.number_input("Monthly Charges", min_value=0.0, max_value=150.0, value=70.0)
+    TotalCharges = st.number_input("Total Charges", min_value=0.0, max_value=10000.0, value=1000.0)
+
+    MultipleLines = st.selectbox("Multiple Lines", ["No", "Yes", "No phone service"])
+    OnlineSecurity = st.selectbox("Online Security", ["No", "Yes", "No internet service"])
+    OnlineBackup = st.selectbox("Online Backup", ["No", "Yes", "No internet service"])
+    DeviceProtection = st.selectbox("Device Protection", ["No", "Yes", "No internet service"])
+    TechSupport = st.selectbox("Tech Support", ["No", "Yes", "No internet service"])
+    StreamingTV = st.selectbox("Streaming TV", ["No", "Yes", "No internet service"])
+    StreamingMovies = st.selectbox("Streaming Movies", ["No", "Yes", "No internet service"])
 
     return pd.DataFrame([{
         "gender": gender,
-        "SeniorCitizen": SeniorCitizen,
+        "SeniorCitizen": 1 if SeniorCitizen == "Yes" else 0,
         "Partner": Partner,
         "Dependents": Dependents,
         "tenure": tenure,

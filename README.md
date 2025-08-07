@@ -1,6 +1,6 @@
 # 📊 SignalStay - Customer Churn Prediction System
 
-An AI-powered solution predicting customer churn with **78% accuracy** using artificial neural networks. Built for telecom companies to reduce attrition through proactive interventions.
+An AI-powered solution predicting customer churn with **81.5% accuracy** using artificial neural networks. Built for telecom companies to reduce attrition through proactive interventions.
 
 ## ✨ Key Features
 - **Predictive Analytics**: 3-layer ANN model (val_acc: 81.5%)

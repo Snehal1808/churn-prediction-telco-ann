@@ -2,6 +2,8 @@
 
 An AI-powered solution predicting customer churn with **81.5% accuracy** using artificial neural networks. Built for telecom companies to reduce attrition through proactive interventions.
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://signalstay.streamlit.app/) 
+
 ## ✨ Key Features
 - **Predictive Analytics**: 3-layer ANN model (val_acc: 81.5%)
 - **Interactive Dashboard**: 
@@ -67,4 +69,4 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 ## 📜 License
 Distributed under the MIT License. See [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) for more information.
 ## ✉️ Contact
-Snehal Kumar Subudhi - snehalsubu18@gmail.com
+Snehal Kumar Subudhi - snehalsubudhi.tech@gmail.com
